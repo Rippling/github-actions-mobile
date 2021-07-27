@@ -1,0 +1,66 @@
+name: Prepare android
+description: Prepare android configuration for production app build
+
+inputs:
+  keystore-string:
+    description: GPG encrypted keystorefile
+    required: true
+  keystore-passphrase:
+    description: Passphrase to decrypt keystorefile
+    required: true
+  keystore-alias:
+    description: Keystore alias
+    required: true
+  keystore-password:
+    description: Keystore file password
+    required: true
+  keystore-alias-password:
+    description: Keystore alias password
+    required: true
+  maps-debug-key:
+    description: Debug api key for google maps
+    required: true
+  maps-prod-key:
+    description: Production api key for google maps
+    required: true
+  sentry-token:
+    description: Sentry auth token
+    required: true
+  sentry-org-name:
+    description: Sentry Organisation name
+    required: true
+  sentry-project-slug:
+    description: Slug/Name of the project in sentry
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Extract keystore file
+      run: |
+        echo "${{ inputs.keystore-string }}" > release.jks.asc
+        gpg -d --passphrase "${{ inputs.keystore-passphrase }}" --batch release.jks.asc > android/release.jks
+      shell: bash
+
+    - name: Create local.properties file
+      run: |
+        cd android
+        echo "keystore.path=../release.jks" > local.properties
+        echo "keystore.alias=${{ inputs.keystore-alias }}" >> local.properties
+        echo "keystore.password=${{ inputs.keystore-password }}" >> local.properties
+        echo "keystore.alias_password=${{ inputs.keystore-alias-password }}" >> local.properties
+        echo "" >> local.properties
+        echo "MAP_KEY_DEBUG=${{ inputs.maps-debug-key }}" >> local.properties
+        echo "MAP_KEY_PROD=${{ inputs.maps-prod-key }}" >> local.properties
+        cd ..
+      shell: bash
+
+    - name: Create sentry file
+      run: |
+        cd android
+        echo "defaults.url=https://sentry.io/" > sentry.properties
+        echo "defaults.org=${{ inputs.sentry-org-name }}" >> sentry.properties
+        echo "defaults.project=${{ inputs.sentry-project-slug }}" >> sentry.properties
+        echo "auth.token=${{ inputs.sentry-token }}" >> sentry.properties
+        cd ..
+      shell: bash
