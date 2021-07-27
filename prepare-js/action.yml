@@ -4,10 +4,15 @@ description: Prepare mobile node modules, as well as webapp submodule
 runs:
   using: composite
   steps:
-    - name: Set node version
-      uses: actions/setup-node@v2
-      with:
-        node-version: '12.19.1'
+    - name: Install nvm and node
+      run: |
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.36.0/install.sh | bash
+        export NVM_DIR="$HOME/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+        nvm install 10.17.0
+        nvm install 12.19.1
+        nvm use 12.19.1
+      shell: bash
 
     - name: Install submodules
       run: |
@@ -17,11 +22,8 @@ runs:
         cd ..
       shell: bash
 
-    - name: Set node version for mobile
-      uses: actions/setup-node@v2
-      with:
-        node-version: '10.17.0'
-
-    - name: Install dependencies
-      run: yarn install --frozen-lockfile --network-timeout 1000000
+    - name: Install mobile dependencies
+      run: |
+        nvm use 10.17.0
+        yarn install --frozen-lockfile --network-timeout 1000000
       shell: bash
