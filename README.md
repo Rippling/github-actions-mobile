@@ -10,7 +10,7 @@ Repository for GH actions shared between mobile repositories
 
 <br />
 
-### Git init
+### Git init `init-git`
 
 <details>
   <summary>Configure git user so script would be able to read and write repositories if necessary</summary>
@@ -24,12 +24,12 @@ Repository for GH actions shared between mobile repositories
 </details>
 <br />
 
-### Prepare android
+### Prepare android `prepare-android`
 
 <details>
 <summary>Prepare android configuration for production app build</summary>
 
-### Inputs
+#### Inputs
 
 - `keystore-string` GPG encrypted keystorefile
 - `keystore-passphrase` Passphrase to decrypt keystorefile
@@ -41,6 +41,19 @@ Repository for GH actions shared between mobile repositories
 - `sentry-token` Sentry auth token
 - `sentry-org-name` Sentry Organisation name
 - `sentry-project-slug` Slug/Name of the project in sentry
+</details>
+
+<br />
+
+### Prepare javascript `prepare-js`
+
+<details>
+<summary>Prepare mobile node modules, as well as webapp submodule</summary>
+
+#### Inputs
+
+none
+
 </details>
 
 <br />
