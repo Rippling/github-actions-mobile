@@ -1,0 +1,44 @@
+name: Configure git
+description: Configure git user so script would be able to read and write repositories if necessary
+
+inputs:
+  ssh-private-key:
+    description: SSH Private key
+    required: true
+  ssh-public-key:
+    description: SSH Public key
+    required: true
+  git-user-email:
+    description: Email to use as git user
+    required: true
+  git-user-name:
+    description: Name of the user to display in git
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Configure SSH
+      run: |
+        mkdir -p ~/.ssh/
+        echo "${{ inputs.ssh-private-key }}" > ~/.ssh/id_rsa
+        echo "${{ inputs.ssh-public-key }}" > ~/.ssh/id_rsa.pub
+        chmod 600 ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa.pub
+      shell: bash
+
+    - name: Restart ssh service
+      run: |
+        if [ "$RUNNER_OS" == "macOS" ]; then
+          sudo launchctl stop com.openssh.sshd
+          sudo launchctl start com.openssh.sshd
+        else
+          sudo systemctl restart ssh
+        fi
+      shell: bash
+
+    - name: Configure git identity
+      run: |
+        git config --global user.email "${{ inputs.git-user-email }}"
+        git config --global user.name "${{ inputs.git-user-name }}"
+      shell: bash
