@@ -20,6 +20,7 @@ runs:
   steps:
     - name: Clear SSH identities
       run: |
+        ssh-agent -s
         ssh-add -D
         ssh-add -k
       shell: bash
