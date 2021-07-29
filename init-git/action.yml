@@ -18,41 +18,27 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Clear SSH identities
+    - name: Configure SSH
       run: |
-        eval `ssh-agent -s`
-        ssh-add -D
         mkdir -p ~/.ssh/
         echo "${{ inputs.ssh-private-key }}" > ~/.ssh/id_rsa
         echo "${{ inputs.ssh-public-key }}" > ~/.ssh/id_rsa.pub
         chmod 600 ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa.pub
-        ssh-add ~/.ssh/id_rsa
-        ssh-add -L
       shell: bash
-    # git config --global user.email "${{ inputs.git-user-email }}"
-    # git config --global user.name "${{ inputs.git-user-name }}"
-    #   shell: bash -l -eo pipefail {0}
 
-    # - name: Save SSH keys
-    #   run: |
-    #   # shell: bash -l -eo pipefail {0}
+    - name: Restart ssh service
+      run: |
+        if [ "$RUNNER_OS" == "macOS" ]; then
+          sudo launchctl stop com.openssh.sshd
+          sudo launchctl start com.openssh.sshd
+        else
+          sudo systemctl restart ssh
+        fi
+      shell: bash
 
-    # - name: Add key
-    #   run: |
-
-    # - name: Restart ssh service
-    #   run: |
-    #     if [ "$RUNNER_OS" == "macOS" ]; then
-    #       sudo launchctl stop com.openssh.sshd
-    #       sudo launchctl start com.openssh.sshd
-    #     else
-    #       sudo systemctl restart ssh
-    #     fi
-    #   shell: bash
-
-    # - name: Configure git identity
-    #   run: |
-    #     git config --global user.email "${{ inputs.git-user-email }}"
-    #     git config --global user.name "${{ inputs.git-user-name }}"
-    #   shell: bash -l -eo pipefail {0}
+    - name: Configure git identity
+      run: |
+        git config --global user.email "${{ inputs.git-user-email }}"
+        git config --global user.name "${{ inputs.git-user-name }}"
+      shell: bash
