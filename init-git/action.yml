@@ -22,22 +22,24 @@ runs:
       run: |
         eval `ssh-agent -s`
         ssh-add -D
-      shell: bash -l -eo pipefail {0}
-
-    - name: Save SSH keys
-      run: |
         mkdir -p ~/.ssh/
         echo "${{ inputs.ssh-private-key }}" > ~/.ssh/id_rsa
         echo "${{ inputs.ssh-public-key }}" > ~/.ssh/id_rsa.pub
         chmod 600 ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa.pub
-      shell: bash -l -eo pipefail {0}
-
-    - name: Add key
-      run: |
         ssh-add ~/.ssh/id_rsa
         ssh-add -L
-      shell: bash -l -eo pipefail {0}
+        git config --global user.email "${{ inputs.git-user-email }}"
+        git config --global user.name "${{ inputs.git-user-name }}"
+      shell: bash
+    #   shell: bash -l -eo pipefail {0}
+
+    # - name: Save SSH keys
+    #   run: |
+    #   # shell: bash -l -eo pipefail {0}
+
+    # - name: Add key
+    #   run: |
 
     # - name: Restart ssh service
     #   run: |
@@ -49,8 +51,8 @@ runs:
     #     fi
     #   shell: bash
 
-    - name: Configure git identity
-      run: |
-        git config --global user.email "${{ inputs.git-user-email }}"
-        git config --global user.name "${{ inputs.git-user-name }}"
-      shell: bash -l -eo pipefail {0}
+    # - name: Configure git identity
+    #   run: |
+    #     git config --global user.email "${{ inputs.git-user-email }}"
+    #     git config --global user.name "${{ inputs.git-user-name }}"
+    #   shell: bash -l -eo pipefail {0}
