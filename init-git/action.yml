@@ -35,7 +35,7 @@ runs:
       shell: bash
 
     - name: Add key
-      run: spawn ssh-add ~/.ssh/id_rsa
+      run: ssh-add ~/.ssh/id_rsa
       shell: bash
 
     # - name: Restart ssh service
