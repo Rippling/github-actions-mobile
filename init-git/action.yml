@@ -19,7 +19,7 @@ runs:
   using: composite
   steps:
     - name: Clear SSH identities
-      run: | 
+      run: |
         ssh-add -D
         ssh-add -k
       shell: bash
@@ -33,9 +33,9 @@ runs:
         chmod 600 ~/.ssh/id_rsa.pub
       shell: bash
 
-    - name: Add key?
-        run: spawn ssh-add ~/.ssh/id_rsa
-        shell: bash
+    - name: Add key
+      run: spawn ssh-add ~/.ssh/id_rsa
+      shell: bash
 
     # - name: Restart ssh service
     #   run: |
