@@ -18,7 +18,13 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Configure SSH
+    - name: Clear SSH identities
+      run: | 
+        ssh-add -D
+        ssh-add -k
+      shell: bash
+
+    - name: Save SSH keys
       run: |
         mkdir -p ~/.ssh/
         echo "${{ inputs.ssh-private-key }}" > ~/.ssh/id_rsa
@@ -27,15 +33,19 @@ runs:
         chmod 600 ~/.ssh/id_rsa.pub
       shell: bash
 
-    - name: Restart ssh service
-      run: |
-        if [ "$RUNNER_OS" == "macOS" ]; then
-          sudo launchctl stop com.openssh.sshd
-          sudo launchctl start com.openssh.sshd
-        else
-          sudo systemctl restart ssh
-        fi
-      shell: bash
+    - name: Add key?
+        run: spawn ssh-add ~/.ssh/id_rsa
+        shell: bash
+
+    # - name: Restart ssh service
+    #   run: |
+    #     if [ "$RUNNER_OS" == "macOS" ]; then
+    #       sudo launchctl stop com.openssh.sshd
+    #       sudo launchctl start com.openssh.sshd
+    #     else
+    #       sudo systemctl restart ssh
+    #     fi
+    #   shell: bash
 
     - name: Configure git identity
       run: |
