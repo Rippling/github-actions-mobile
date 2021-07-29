@@ -29,9 +29,9 @@ runs:
         chmod 600 ~/.ssh/id_rsa.pub
         ssh-add ~/.ssh/id_rsa
         ssh-add -L
-        git config --global user.email "${{ inputs.git-user-email }}"
-        git config --global user.name "${{ inputs.git-user-name }}"
       shell: bash
+    # git config --global user.email "${{ inputs.git-user-email }}"
+    # git config --global user.name "${{ inputs.git-user-name }}"
     #   shell: bash -l -eo pipefail {0}
 
     # - name: Save SSH keys
