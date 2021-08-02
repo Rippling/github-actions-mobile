@@ -1,11 +1,12 @@
 name: Prepare javascript dependencies
 description: Prepare mobile node modules, as well as webapp submodule
 
+env:
+  WEBAPP_NODE_VERSION: '12.19.1'
+  MOBILE_NODE_VERSION: '16.6.0'
+
 runs:
   using: composite
-  env:
-    WEBAPP_NODE_VERSION: '12.19.1'
-    MOBILE_NODE_VERSION: '16.6.0'
   steps:
     - name: Install nvm and node
       run: |
