@@ -3,15 +3,18 @@ description: Prepare mobile node modules, as well as webapp submodule
 
 runs:
   using: composite
+  env:
+    WEBAPP_NODE_VERSION: '12.19.1'
+    MOBILE_NODE_VERSION: '16.6.0'
   steps:
     - name: Install nvm and node
       run: |
         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
         export NVM_DIR="$HOME/.nvm"
         [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-        nvm install 10.17.0
-        nvm install 12.19.1
-        nvm use 12.19.1
+        nvm install $MOBILE_NODE_VERSION
+        nvm install $WEBAPP_NODE_VERSION
+        nvm use $WEBAPP_NODE_VERSION
       shell: bash -l -eo pipefail {0}
 
     - name: Install submodules
@@ -24,6 +27,6 @@ runs:
 
     - name: Install mobile dependencies
       run: |
-        nvm use 10.17.0
+        nvm use $MOBILE_NODE_VERSION
         yarn install --frozen-lockfile --network-timeout 1000000
       shell: bash -l -eo pipefail {0}
