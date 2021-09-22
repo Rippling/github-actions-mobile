@@ -45,7 +45,6 @@ runs:
         lfs: ${{ inputs.lfs }}
         submodules: ${{ inputs.submodules }}
         token: ${{ inputs.token }}
-      shell: bash
 
     - name: Configuring GIT User
       run: |
