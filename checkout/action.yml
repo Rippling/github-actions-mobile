@@ -1,0 +1,60 @@
+name: GIT Checkout
+description: Configure git user so script would be able to read and write repositories if necessary
+
+inputs:
+  repository:
+    description: Repository name with owner. For example, Rippling/github-actions-mobile
+    required: false
+  ref:
+    description: The branch, tag or SHA to checkout.
+    required: false
+  path:
+    description: Relative path under $GITHUB_WORKSPACE to place the repository.
+    required: false
+  clean:
+    description: Whether to execute `git clean -ffdx && git reset --hard HEAD` before fetching.
+    required: false
+    default: 'true'
+  fetch-depth:
+    description: Number of commits to fetch. 0 indicates all history for all branches and tags.
+    required: false
+    default: '1'
+  lfs:
+    description: Whether to download Git-LFS files.
+    required: false
+    default: 'false'
+  submodules:
+    description: Whether to checkout submodules (true to checkout submodules or recursive to recursively checkout submodules).
+    required: false
+    default: 'false'
+  write-access:
+    description: Write Access for protected branch
+    required: false
+    default: 'false'
+
+runs:
+  using: composite
+  steps:
+    - name: Managing Repository Access
+      if: ${{ inputs.write-access == 'true' }}
+      run: echo "FRONTEND_CI_TOKEN=${{ secrets.FRONTEND_CI_TOKEN }}" >> $GITHUB_ENV
+      shell: bash
+
+    - name: Checkout project with write access
+      uses: actions/checkout@v2
+      with:
+        repository: ${{ inputs.repository }}
+        ref: ${{ inputs.ref }}
+        path: ${{ inputs.path }}
+        clean: ${{ inputs.clean }}
+        fetch-depth: ${{ inputs.fetch-depth }}
+        lfs: ${{ inputs.lfs }}
+        submodules: ${{ inputs.submodules }}
+        token: ${{ env.FRONTEND_CI_TOKEN }}
+      shell: bash
+
+    - name: Configuring GIT User
+      run: |
+        git config --global user.email "${{ secrets.FRONTEND_CI_EMAIL}}"
+        git config --global user.name "${{ secrets.FRONTEND_CI_NAME}}"
+      shell: bash
