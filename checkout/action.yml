@@ -44,7 +44,6 @@ runs:
         fetch-depth: ${{ inputs.fetch-depth }}
         lfs: ${{ inputs.lfs }}
         submodules: ${{ inputs.submodules }}
-        token: ${{ inputs.token }}
 
     - name: Configuring GIT User
       run: |
