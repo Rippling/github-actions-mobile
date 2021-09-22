@@ -1,3 +1,5 @@
+# DEPRECATED: Use checkout action instead.
+
 name: Configure git
 description: Configure git user so script would be able to read and write repositories if necessary
 
