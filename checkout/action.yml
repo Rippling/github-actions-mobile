@@ -36,8 +36,10 @@ runs:
   using: composite
   steps:
     - name: Managing Repository Access
-      if: ${{ inputs.write-access == 'true' }}
-      run: echo "FRONTEND_CI_TOKEN=${{ secrets.FRONTEND_CI_TOKEN }}" >> $GITHUB_ENV
+      run: |
+        if [ "${{inputs.write-access}}" == "true" ] then
+          echo "FRONTEND_CI_TOKEN=${{ secrets.FRONTEND_CI_TOKEN }}" >> $GITHUB_ENV
+        fi
       shell: bash
 
     - name: Checkout project with write access
