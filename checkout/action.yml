@@ -29,7 +29,7 @@ inputs:
     default: 'false'
   token:
     description: Github Access Token for managing access
-    required: false
+    required: true
 
 runs:
   using: composite
