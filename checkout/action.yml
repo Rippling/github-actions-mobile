@@ -38,7 +38,7 @@ runs:
     - name: Managing Repository Access
       run: |
         if [ "${{inputs.write-access}}" == "true" ] then
-          echo "FRONTEND_CI_TOKEN=${{ secrets.FRONTEND_CI_TOKEN }}" >> $GITHUB_ENV
+          echo "FRONTEND_CI_TOKEN="${{ secrets.FRONTEND_CI_TOKEN }}"" >> $GITHUB_ENV
         fi
       shell: bash
 
