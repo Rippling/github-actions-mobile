@@ -27,21 +27,13 @@ inputs:
     description: Whether to checkout submodules (true to checkout submodules or recursive to recursively checkout submodules).
     required: false
     default: 'false'
-  write-access:
-    description: Write Access for protected branch
+  token:
+    description: Github Access Token for managing access
     required: false
-    default: 'false'
 
 runs:
   using: composite
   steps:
-    - name: Managing Repository Access
-      run: |
-        if [ "${{inputs.write-access}}" == "true" ] then
-          echo "FRONTEND_CI_TOKEN="${{ secrets.FRONTEND_CI_TOKEN }}"" >> $GITHUB_ENV
-        fi
-      shell: bash
-
     - name: Checkout project with write access
       uses: actions/checkout@v2
       with:
@@ -52,11 +44,11 @@ runs:
         fetch-depth: ${{ inputs.fetch-depth }}
         lfs: ${{ inputs.lfs }}
         submodules: ${{ inputs.submodules }}
-        token: ${{ env.FRONTEND_CI_TOKEN }}
+        token: ${{ inputs.token }}
       shell: bash
 
     - name: Configuring GIT User
       run: |
-        git config --global user.email "${{ secrets.FRONTEND_CI_EMAIL}}"
-        git config --global user.name "${{ secrets.FRONTEND_CI_NAME}}"
+        git config --global user.email "frontend@rippling.com"
+        git config --global user.name "Rippling Frontend CI"
       shell: bash
