@@ -1,5 +1,5 @@
 name: 'Send Slack'
-description: 'Report GitHub Actions build status on Slack'
+description: 'Send Slack notification message to given channel'
 branding:
   icon: message-square
   color: orange
