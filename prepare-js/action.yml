@@ -29,7 +29,7 @@ runs:
     - name: Install mobile dependencies
       run: |
         nvm use $MOBILE_NODE_VERSION
-        yarn install --frozen-lockfile --network-timeout 1000000
+        yarn install --frozen-lockfile --network-concurrency 1 --network-timeout 1000000
       shell: bash -l -eo pipefail {0}
 
     - name: Create build dir
