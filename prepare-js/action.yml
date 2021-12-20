@@ -8,31 +8,40 @@ env:
 runs:
   using: composite
   steps:
-    - name: Install nvm and node
+    - name: Install webapp submodule
+        run: |
+          git submodule update --init --recursive
+    - name: Setup webapp node version
+      uses: actions/setup-node@v2
+      with:
+        node-version: $WEBAPP_NODE_VERSION
+        cache: 'npm'
+        cache-dependency-path: webapp/package-lock.json
+    - name: Cache webapp node_modules
+      uses: actions/cache@v2
+      id: webapp-node-cache
+      with:
+        path: webapp/node_modules
+        key: ${{ runner.os }}-node-modules-${{ hashFiles('webapp/package-lock.json') }}
+    - name: Install webapp node_modules
+      if: steps.webapp-node-cache.outputs.cache-hit != 'true'
       run: |
-        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
-        export NVM_DIR="$HOME/.nvm"
-        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-        nvm install $MOBILE_NODE_VERSION
-        nvm install $WEBAPP_NODE_VERSION
-        nvm use $WEBAPP_NODE_VERSION
-      shell: bash -l -eo pipefail {0}
-
-    - name: Install submodules
-      run: |
-        git submodule update --init --recursive
         cd webapp
         npm install
         cd ..
-      shell: bash -l -eo pipefail {0}
-
-    - name: Install mobile dependencies
+    - name: Setup mobileapp node version
+      uses: actions/setup-node@v2
+      with:
+        node-version: $MOBILE_NODE_VERSION
+        cache: 'yarn'
+        cache-dependency-path: yarn.lock
+    - name: Cache mobileapp node_modules
+      uses: actions/cache@v2
+      id: mobileapp-node-cache
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-node-modules-${{ hashFiles('yarn.lock') }}
+    - name: Install mobile node_modules
+      if: steps.mobileapp-node-cache.outputs.cache-hit != 'true'
       run: |
-        nvm use $MOBILE_NODE_VERSION
-        yarn install --frozen-lockfile --network-concurrency 1 --network-timeout 1000000
-      shell: bash -l -eo pipefail {0}
-
-    - name: Create build dir
-      run: |
-        mkdir build
-      shell: bash -l -eo pipefail {0}
+        yarn install --frozen-lockfile --network-concurrency 12 --network-timeout 1000000
