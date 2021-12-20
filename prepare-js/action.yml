@@ -9,8 +9,8 @@ runs:
   using: composite
   steps:
     - name: Install webapp submodule
-        run: |
-          git submodule update --init --recursive
+      run: |
+        git submodule update --init --recursive
     - name: Setup webapp node version
       uses: actions/setup-node@v2
       with:
