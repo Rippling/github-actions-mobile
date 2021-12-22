@@ -28,6 +28,7 @@ runs:
       if: steps.webapp-node-cache.outputs.cache-hit != 'true'
       run: |
         cd webapp
+        npm --version
         npx -p npm@6.14.8 npm ci
         cd ..
       shell: bash
