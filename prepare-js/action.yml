@@ -15,7 +15,8 @@ runs:
     - name: Setup webapp node version
       uses: actions/setup-node@v2
       with:
-        node-version: ${{ env.WEBAPP_NODE_VERSION }}
+        node-version: '12.19.1'
+        cache: 'npm'
         cache-dependency-path: webapp/package-lock.json
     - name: Cache webapp node_modules
       uses: actions/cache@v2
