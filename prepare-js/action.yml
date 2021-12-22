@@ -28,7 +28,7 @@ runs:
       if: steps.webapp-node-cache.outputs.cache-hit != 'true'
       run: |
         cd webapp
-        npm install
+        npm ci
         cd ..
       shell: bash
     - name: Setup mobileapp node version
