@@ -29,7 +29,10 @@ runs:
       run: |
         cd webapp
         npm --version
-        npx -p npm@6.14.8 npm ci
+        npm -g install npm@6.14.8
+        npm --version
+        npm ci
+        npm --version
         cd ..
       shell: bash
     - name: Setup mobileapp node version
