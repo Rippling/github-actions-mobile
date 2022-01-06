@@ -45,6 +45,8 @@ runs:
         if [ $INTERMEDIATE_BRANCH == "chore/pr" ]
         then
           git checkout -- :
+          git fetch origin $SOURCE_BRANCH
+          git checkout $SOURCE_BRANCH
         else
           SOURCE_BRANCH=$INTERMEDIATE_BRANCH-$DATE_TIME
           git checkout -b $SOURCE_BRANCH
