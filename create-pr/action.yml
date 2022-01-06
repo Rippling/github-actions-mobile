@@ -52,7 +52,7 @@ runs:
           git commit -am "$COMMIT_MESSAGE"
           git push -u origin $SOURCE_BRANCH
         fi
-        PR_URL=$(hub pull-request -m '"$PR_TITLE"' -b $TARGET_BRANCH -h $SOURCE_BRANCH -l "$LABELS")
+        PR_URL=$(hub pull-request -m '"$PR_TITLE"' -b $TARGET_BRANCH -h $SOURCE_BRANCH -l '"$LABELS"')
         gh pr merge $PR_URL --auto --$MERGE_STRATEGY
       env:
         GITHUB_TOKEN: ${{ inputs.token }}
