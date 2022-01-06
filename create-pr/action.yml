@@ -27,8 +27,6 @@ inputs:
     required: false
     default: 'Auto Merge'
 
-
-
 runs:
   using: composite
   steps:
@@ -40,7 +38,9 @@ runs:
         INTERMEDIATE_BRANCH=${{ inputs.intermediate-branch }}
         MERGE_STRATEGY=${{ inputs.merge-strategy }}
         LABELS=${{ inputs.labels }}
+
         DATE_TIME=$(date '+%Y-%m-%d_%H-%M')
+        PR_TITLE="$PR_TITLE $DATE_TIME"
         COMMIT_MESSAGE=$PR_TITLE
         if [ $INTERMEDIATE_BRANCH == "chore/pr" ]
         then
