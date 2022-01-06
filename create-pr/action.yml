@@ -1,0 +1,59 @@
+name: Create Pull Request
+description: Create a pull request that will merge or squash automatically
+
+inputs:
+  token:
+    description: Github Access Token for managing access
+    required: true
+  title:
+    description: Title of the PR.
+    required: true
+  source:
+    description: The source branch to checkout.
+    required: true
+  target:
+    description: The target branch to raise PR against.
+    required: true
+  intermediate-branch:
+    description: If you want to create a intermediate branch with uncommitted changes.
+    required: false
+    default: 'chore/pr'
+  merge-strategy:
+    description: Merge strategy either merge or squash.
+    required: false
+    default: 'merge'
+  labels:
+    description: Comma separated list of labels
+    required: false
+    default: 'Auto Merge'
+
+
+
+runs:
+  using: composite
+  steps:
+    - name: Create Pull Request
+      run: |
+        PR_TITLE=${{ inputs.title }}
+        SOURCE_BRANCH=${{ inputs.source }}
+        TARGET_BRANCH=${{ inputs.target }}
+        INTERMEDIATE_BRANCH=${{ inputs.intermediate-branch }}
+        MERGE_STRATEGY=${{ inputs.merge-strategy }}
+        LABELS=${{ inputs.labels }}
+        DATE_TIME=$(date '+%Y-%m-%d_%H-%M')
+        COMMIT_MESSAGE=$PR_TITLE
+        if [ $INTERMEDIATE_BRANCH == "chore/pr" ]
+        then
+          git checkout -- :
+        else
+          SOURCE_BRANCH=$INTERMEDIATE_BRANCH-$DATE_TIME
+          git checkout -b $SOURCE_BRANCH
+          git add --all
+          git commit -am "$COMMIT_MESSAGE"
+          git push -u origin $SOURCE_BRANCH
+        fi
+        PR_URL=$(hub pull-request -m "$PR_TITLE" -b $TARGET_BRANCH -h $SOURCE_BRANCH -l "$LABELS")
+        gh pr merge $PR_URL --auto --$MERGE_STRATEGY
+      env:
+        GITHUB_TOKEN: ${{ inputs.token }}
+      shell: bash
