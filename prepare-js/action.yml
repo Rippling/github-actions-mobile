@@ -42,5 +42,6 @@ runs:
     - name: Install mobile node_modules
       if: steps.mobileapp-node-cache.outputs.cache-hit != 'true'
       run: |
-        yarn install --frozen-lockfile --network-concurrency 12 --network-timeout 1000000
+        export UV_THREADPOOL_SIZE=64
+        yarn install --frozen-lockfile --network-concurrency 16 --network-timeout 1000000
       shell: bash
