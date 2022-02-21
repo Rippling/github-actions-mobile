@@ -51,7 +51,7 @@ runs:
           SOURCE_BRANCH=$INTERMEDIATE_BRANCH-$DATE_TIME
           git checkout -b $SOURCE_BRANCH
           git add --all
-          git commit -am "$COMMIT_MESSAGE"
+          git commit -am "$COMMIT_MESSAGE" || true
           git push -u origin $SOURCE_BRANCH
         fi
         PR_URL=$(hub pull-request -m "$PR_TITLE" -b $TARGET_BRANCH -h $SOURCE_BRANCH -l "$LABELS")
