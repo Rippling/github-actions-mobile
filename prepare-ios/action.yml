@@ -1,0 +1,26 @@
+name: Prepare ios
+description: Prepare ios configuration for app build
+
+inputs:
+  sentry-token:
+    description: Sentry auth token
+    required: true
+  sentry-org-name:
+    description: Sentry Organisation name
+    required: true
+  sentry-project-slug:
+    description: Slug/Name of the project in sentry
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Create sentry file
+      run: |
+        cd ios
+        echo "defaults.url=https://sentry.io/" > sentry.properties
+        echo "defaults.org=${{ inputs.sentry-org-name }}" >> sentry.properties
+        echo "defaults.project=${{ inputs.sentry-project-slug }}" >> sentry.properties
+        echo "auth.token=${{ inputs.sentry-token }}" >> sentry.properties
+        cd ..
+      shell: bash
