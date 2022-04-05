@@ -12,6 +12,9 @@ runs:
       uses: actions/setup-node@v2
       with:
         node-version: '12.19.1'
+    - name: Clean npm cache
+      run: |
+        npm cache clean --force
     - name: Install webapp node_modules
       run: |
         cd webapp
