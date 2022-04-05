@@ -15,6 +15,7 @@ runs:
     - name: Clean npm cache
       run: |
         npm cache clean --force
+      shell: bash
     - name: Install webapp node_modules
       run: |
         cd webapp
