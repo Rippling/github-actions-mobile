@@ -52,25 +52,6 @@ runs:
         submodules: ${{ inputs.submodules }}
         token: ${{ inputs.token }}
 
-    - name: Configure SSH Client
-      run: |
-        mkdir -p ~/.ssh/
-        echo "${{ inputs.ssh-private-key }}" > ~/.ssh/id_rsa
-        echo "${{ inputs.ssh-public-key }}" > ~/.ssh/id_rsa.pub
-        chmod 600 ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa.pub
-      shell: bash
-
-    - name: Restart SSH Client
-      run: |
-        if [ "$RUNNER_OS" == "macOS" ]; then
-          sudo launchctl stop com.openssh.sshd
-          sudo launchctl start com.openssh.sshd
-        else
-          sudo systemctl restart ssh
-        fi
-      shell: bash
-    
     - name: Configuring GIT User
       run: |
         git config --global user.email "frontend@rippling.com"
