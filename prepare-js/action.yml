@@ -51,3 +51,8 @@ runs:
         export UV_THREADPOOL_SIZE=64
         yarn install --frozen-lockfile --network-concurrency 8 --network-timeout 1000000
       shell: bash
+    - name: Post install steps
+      if: steps.mobileapp-node-cache.outputs.cache-hit == 'true'
+      run: |
+        yarn postinstall
+      shell: bash
