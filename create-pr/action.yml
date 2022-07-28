@@ -56,6 +56,13 @@ runs:
         fi
         PR_URL=$(hub pull-request -m "$PR_TITLE" -b $TARGET_BRANCH -h $SOURCE_BRANCH -l "$LABELS")
         gh pr merge $PR_URL --auto --$MERGE_STRATEGY
+        if [ $INTERMEDIATE_BRANCH == "chore/pr" ]
+        then
+          echo "Manual Approval"
+        else
+          echo "Auto Approve"
+          gh pr review $PR_URL -a
+        fi
       env:
         GITHUB_TOKEN: ${{ inputs.token }}
       shell: bash
