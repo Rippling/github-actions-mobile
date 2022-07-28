@@ -66,6 +66,7 @@ runs:
           echo "Manual Approval"
         else
           echo "Auto Approve"
+          export GITHUB_TOKEN=
           echo $APPROVER_TOKEN | gh auth login --with-token
           gh pr review $PR_URL -a
         fi
