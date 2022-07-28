@@ -26,6 +26,10 @@ inputs:
     description: Comma separated list of labels
     required: false
     default: 'Auto Merge'
+  approver-token:
+    description: Github Access Token for approving PR
+    required: false
+    default: 'none'
 
 runs:
   using: composite
@@ -38,6 +42,7 @@ runs:
         INTERMEDIATE_BRANCH="${{ inputs.intermediate-branch }}"
         MERGE_STRATEGY="${{ inputs.merge-strategy }}"
         LABELS="${{ inputs.labels }}"
+        APPROVER_TOKEN="${{ inputs.approver-token }}"
 
         DATE_TIME=$(date '+%Y-%m-%d_%H-%M')
         PR_TITLE="$PR_TITLE $DATE_TIME"
@@ -56,11 +61,12 @@ runs:
         fi
         PR_URL=$(hub pull-request -m "$PR_TITLE" -b $TARGET_BRANCH -h $SOURCE_BRANCH -l "$LABELS")
         gh pr merge $PR_URL --auto --$MERGE_STRATEGY
-        if [ $INTERMEDIATE_BRANCH == "chore/pr" ]
+        if [ $APPROVER_TOKEN == "none" ]
         then
           echo "Manual Approval"
         else
           echo "Auto Approve"
+          echo $APPROVER_TOKEN | gh auth login --with-token
           gh pr review $PR_URL -a
         fi
       env:
